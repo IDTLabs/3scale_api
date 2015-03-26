@@ -1,4 +1,10 @@
 source 'https://rubygems.org'
 
-# Specify your gem's dependencies in threescale_api.gemspec
+gem 'faraday'
+gem 'json'
 gemspec
+gem "bundler", "~> 1.6"
+gem "rake", "~> 10.0"
+gem "webmock"
+gem "vcr"
+gem 'rspec'
