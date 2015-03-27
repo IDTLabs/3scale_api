@@ -65,5 +65,15 @@ module Threescale
       response = conn.post "/admin/api/accounts/#{account_id}/applications/#{application_id}/keys.xml", {:provider_key => @provider_key , :key => new_key }
       response.status == 201
     end
+    def create_application(account_id, plan_id, name, description = nil)
+      response = conn.post "/admin/api/accounts/#{account_id}/applications.xml", {:provider_key => @provider_key , :name => name, :description => description, :plan_id => plan_id}
+      return false if response.status != 201
+      xml = Nokogiri::XML(response.body)
+      result = {
+          :app_id => xml.css("application application_id").text ,
+          :application_id => xml.css("application id").text,
+          :keys => [xml.css("application keys key").text]
+      }
+    end
   end
 end
