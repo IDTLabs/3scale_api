@@ -8,9 +8,9 @@ Gem::Specification.new do |spec|
   spec.version       = ThreescaleApi::VERSION
   spec.authors       = ["Robbie Holmes"]
   spec.email         = ["robbiethegeek@gmail.com"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
-  spec.homepage      = ""
+  spec.summary       = %q{3Scale API client gem.}
+  spec.description   = %q{This gem is to be used to interact with 3Scale's API.}
+  spec.homepage      = "https://github.com/IDTLabs/threescale_api"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
