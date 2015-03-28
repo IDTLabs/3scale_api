@@ -16,7 +16,7 @@ module Threescale
         if ENV['THREESCALE_PROVIDER_KEY']
           provider_key = ENV['THREESCALE_PROVIDER_KEY']
         end
-        raise Error, "You must provide a 3 Scale provider key" if not providerKey
+        raise Error, "You must provide a 3 Scale provider key" if not provider_key
       end
       @provider_key = provider_key
       @conn = Faraday.new(url = @url) do | faraday|
