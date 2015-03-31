@@ -89,6 +89,68 @@ module Threescale
       }
     end
 
+    def lookup_application_plan_by_service_id(service_id)
+      response = conn.get "/admin/api/services/#{service_id}/application_plans.xml", {:provider_key => @provider_key}
+      return false if response.status == 404
+      xml = Nokogiri::XML(response.body)
+      plans = xml.xpath("//plans/plan")
+      results = Array.new
+      plans.each do |plan|
+        results.push({
+          :id => plan.css("id").text,
+          :name => plan.css("name").text
+          })
+      end
+      results
+    end
+
+    def lookup_application_by_id(account_id, application_id)
+      response = conn.get "/admin/api/accounts/#{account_id}/applications/#{application_id}.xml", {:provider_key => @provider_key}
+      return false if response.status == 404
+
+      xml = Nokogiri::XML(response.body)
+      results = {
+        :application_id => xml.css("application id").text,
+        :app_id => xml.css("application_id").text,
+        :name => xml.css("name").text,
+        :description => xml.css("description").text,
+        :plan => {
+          :name => xml.css("plan name").text,
+          :service_number => xml.css("plan service_id").text
+        }
+      }
+      keys = xml.xpath('//keys/key')
+      results[:keys] = keys.map do |key|
+        key.text
+      end
+
+      results
+    end
+
+    def update_application_info(account_id, application_id, name, description = nil)
+      response = conn.put "/admin/api/accounts/#{account_id}/applications/#{application_id}.xml",
+                           {:provider_key => @provider_key,
+                            :name => name,
+                            :description => description}
+      xml = Nokogiri::XML(response.body)
+      if response.status == 422
+        errors = xml.xpath("//errors/error").map do |error|
+          error.text
+        end
+        return {
+            :success => false,
+            :errors => errors
+        }
+      end
+      return false if response.status == 404
+      result = {
+          :success => true,
+          :name => xml.css("application>name").text ,
+          :description => xml.css("description").text
+      }
+    end
+
+
     ################ User Methods ################
 
     def create_user_account(username, email, password)
@@ -121,7 +183,6 @@ module Threescale
                             :email => email,
                             :password => password}
       xml = Nokogiri::XML(response.body)
-      p response.body
       if response.status == 422
         errors = xml.xpath("//errors/error").map do |error|
           error.text
@@ -131,6 +192,7 @@ module Threescale
             :errors => errors
         }
       end
+      return false if response.status == 404
       result = {
           :success => true,
           :user_id => xml.css("id").text ,
