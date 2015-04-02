@@ -11,7 +11,6 @@ Gem::Specification.new do |spec|
   spec.summary       = %q{3Scale API client gem.}
   spec.description   = %q{This gem is to be used to interact with 3Scale's API.}
   spec.homepage      = "https://github.com/IDTLabs/3scale_api"
-  spec.homepage      = "https://github.com/IDTLabs/3scale_api"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
