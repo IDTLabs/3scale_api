@@ -1,7 +1,7 @@
 require 'rubygems'
 require 'bundler/setup'
 # our gem
-require 'threescale_api'
+require '3scale_api'
 
 RSpec.configure do |config|
 

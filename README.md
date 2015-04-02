@@ -1,15 +1,17 @@
-# Threescale - API
+# 3scale - API
 
 [![Join the chat at https://gitter.im/IDTLabs/threescale_api](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/IDTLabs/threescale_api?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Gem Version](https://badge.fury.io/rb/threescale_api.svg)](http://badge.fury.io/rb/threescale_api)
-TODO: Write a gem description
+
+This gem will allow developers to interact with 3Scale's APIs.
+
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'threescale_api'
+gem '3scale_api'
 ```
 
 And then execute:
@@ -18,11 +20,8 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install threescale_api
+    $ gem install 3scale_api
 
-## Usage
-
-TODO: Write usage instructions here
 
 ## Contributing
 
