@@ -1,8 +1,9 @@
 require 'rubygems'
 require 'bundler/setup'
-# our gem
+require 'webmock/rspec'
+require 'webmock/rspec/matchers'
+require 'webmock/rspec/matchers/request_pattern_matcher'
+require 'webmock/rspec/matchers/webmock_matcher'
 require '3scale_api'
 
-RSpec.configure do |config|
-
-end
+WebMock.disable_net_connect!(allow_localhost: true)
