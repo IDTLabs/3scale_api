@@ -86,5 +86,37 @@ module Threescale
       results
     end
 
+    def get_service_plans
+      results = Array.new
+      response = @conn.get "/admin/api/application_plans.xml", {:provider_key => @provider_key }
+      xml = Nokogiri::XML(response.body)
+      plans = xml.xpath("//plans/plan")
+      plans = plans.map do |plan|
+        {
+          :name => plan.css("name").text,
+          :service_plan_id => plan.css("service_id").text
+        }
+      end
+    end
+
+    def get_services
+      results = Array.new
+      response = @conn.get "/admin/api/services.xml", {:provider_key => @provider_key }
+      xml = Nokogiri::XML(response.body)
+      p xml
+      services = xml.xpath("//services/service")
+      services.map do |service|
+        {
+            :name => service.css("name").first.text,
+            :service_id => service.css("id").first.text
+        }
+      end
+    end
+
+    def create_account(name, service_id)
+      response = @conn.post "/admin/api/services/#{service_id}/application_plans.xml", {:provider_key => @provider_key,
+        :name => name}
+      response.status == 201
+    end
   end
 end
