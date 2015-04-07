@@ -154,5 +154,45 @@ describe "3scaleApi" do
         @threescale.create_account "name", "service-id"
       end
     end
+
+    describe "create_user" do
+      it "should call /admin/api/accounts/{account_id}/users.xml" do
+        stub_request(:post, "http://test-url.test/admin/api/accounts/account-id/users.xml").
+            with(:body => {"email"=>"email", "password"=>"password", "provider_key"=>"provider-key", "username"=>"username"},
+                 :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/x-www-form-urlencoded', 'User-Agent'=>'Faraday v0.9.1'}).
+            to_return(:status => 200, :body => "", :headers => {})
+        @threescale.create_user "account-id", "email", 'password', 'username'
+      end
+    end
+
+    describe "activate_user" do
+      it "should call /admin/api/accounts/{account_id}/users/{user_id}/activate.xml" do
+        stub_request(:put, "http://test-url.test/admin/api/accounts/account-id/users/user-id/activate.xml").
+            with(:body => {"provider_key"=>"provider-key"},
+                 :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/x-www-form-urlencoded', 'User-Agent'=>'Faraday v0.9.1'}).
+            to_return(:status => 200, :body => "", :headers => {})
+        @threescale.activate_user "account-id", "user-id"
+      end
+    end
+
+    describe "change_role_to_admin" do
+      it "should call /admin/api/accounts/{account_id}/users/{user_id}/admin.xml" do
+        stub_request(:put, "http://test-url.test/admin/api/accounts/account-id/users/user-id/admin.xml").
+            with(:body => {"provider_key"=>"provider-key"},
+                 :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/x-www-form-urlencoded', 'User-Agent'=>'Faraday v0.9.1'}).
+            to_return(:status => 200, :body => "", :headers => {})
+        @threescale.change_role_to_admin "account-id", "user-id"
+      end
+    end
+
+    describe "change_role_to_member" do
+      it "should call /admin/api/accounts/{account_id}/users/{user_id}/member.xml" do
+        stub_request(:put, "http://test-url.test/admin/api/accounts/account-id/users/user-id/member.xml").
+            with(:body => {"provider_key"=>"provider-key"},
+                 :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/x-www-form-urlencoded', 'User-Agent'=>'Faraday v0.9.1'}).
+            to_return(:status => 200, :body => "", :headers => {})
+        @threescale.change_role_to_member "account-id", "user-id"
+      end
+    end
   end
 end

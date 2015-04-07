@@ -103,7 +103,6 @@ module Threescale
       results = Array.new
       response = @conn.get "/admin/api/services.xml", {:provider_key => @provider_key }
       xml = Nokogiri::XML(response.body)
-      p xml
       services = xml.xpath("//services/service")
       services.map do |service|
         {
@@ -118,5 +117,30 @@ module Threescale
         :name => name}
       response.status == 201
     end
+
+    def create_user(account_id, email, password, username)
+      response = @conn.post "/admin/api/accounts/#{account_id}/users.xml", {:provider_key => @provider_key,
+        :username => username, :password => password, :email => email}
+      response.status == 201
+    end
+
+    def activate_user(account_id, user_id)
+      response = @conn.put "/admin/api/accounts/#{account_id}/users/#{user_id}/activate.xml", {
+        :provider_key => @provider_key}
+      response.status == 201
+    end
+
+    def change_role_to_admin(account_id, user_id)
+      response = @conn.put "/admin/api/accounts/#{account_id}/users/#{user_id}/admin.xml", {
+        :provider_key => @provider_key}
+      response.status == 201
+    end
+
+    def change_role_to_member(account_id, user_id)
+      response = @conn.put "/admin/api/accounts/#{account_id}/users/#{user_id}/member.xml", {
+        :provider_key => @provider_key}
+      response.status == 201
+    end
+
   end
 end
