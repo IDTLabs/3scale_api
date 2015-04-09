@@ -115,7 +115,9 @@ module Threescale
     def create_account(name, service_id)
       response = @conn.post "/admin/api/services/#{service_id}/application_plans.xml", {:provider_key => @provider_key,
         :name => name}
-      response.status == 201
+      return false if response.status != 201
+      xml = Nokogiri::XML(response.body)
+      xml.css("plan id").text
     end
 
     def create_user(account_id, email, password, username)
