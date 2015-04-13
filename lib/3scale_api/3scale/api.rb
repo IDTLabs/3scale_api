@@ -112,12 +112,32 @@ module Threescale
       end
     end
 
-    def create_account(name, service_id)
-      response = @conn.post "/admin/api/services/#{service_id}/application_plans.xml", {:provider_key => @provider_key,
-        :name => name}
-      return false if response.status != 201
+    # Account API methods
+    def approve_account(account_id)
+      response = @conn.put "/admin/api/accounts/#{account_id}/approve.xml", {
+        :provider_key => @provider_key}
+      response.status == 201
+    end
+
+    def signup_express(account_plan_id, application_plan_id, email, org_name, password, service_plan_id, username,
+      additional_fields = nil)
+      params = {:provider_key => @provider_key, :username => username,
+                :password => password, :email => email, :org_name => org_name, :account_plan_id => account_plan_id,
+                :service_plan_id => service_plan_id, :application_plan_id => application_plan_id}
+      if (additional_fields)
+        additional_fields.each do |key, value|
+          params[key] = value
+        end
+      end
+      response = @conn.post "/admin/api/signup.xml", params
+      return false = response.status != 201
       xml = Nokogiri::XML(response.body)
-      xml.css("plan id").text
+      account_id = xml.xpath('//account/id').first.text
+      user_id = xml.xpath('//account/users/user/id').text
+      self.approve_account account_id
+      results = self.get_application_list account_id
+      results[0][:user_id] = user_id.to_s
+      results
     end
 
     def create_user(account_id, email, password, username)
