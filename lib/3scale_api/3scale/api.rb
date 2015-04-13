@@ -130,7 +130,7 @@ module Threescale
         end
       end
       response = @conn.post "/admin/api/signup.xml", params
-      return false = response.status != 201
+      return false if response.status != 201
       xml = Nokogiri::XML(response.body)
       account_id = xml.xpath('//account/id').first.text
       user_id = xml.xpath('//account/users/user/id').text

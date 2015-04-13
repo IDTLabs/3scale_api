@@ -145,16 +145,6 @@ describe "3scaleApi" do
       end
     end
 
-    describe "create_account" do
-      it "should call /admin/api/accounts/{account_id}/applications.xml" do
-        stub_request(:post, "http://test-url.test/admin/api/services/service-id/application_plans.xml").
-            with(:body => {"name"=>"name", "provider_key"=>"provider-key"},
-                 :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/x-www-form-urlencoded', 'User-Agent'=>'Faraday v0.9.1'}).
-            to_return(:status => 200, :body => "", :headers => {})
-        @threescale.create_account "name", "service-id"
-      end
-    end
-
     describe "create_user" do
       it "should call /admin/api/accounts/{account_id}/users.xml" do
         stub_request(:post, "http://test-url.test/admin/api/accounts/account-id/users.xml").
@@ -192,6 +182,29 @@ describe "3scaleApi" do
                  :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/x-www-form-urlencoded', 'User-Agent'=>'Faraday v0.9.1'}).
             to_return(:status => 200, :body => "", :headers => {})
         @threescale.change_role_to_member "account-id", "user-id"
+      end
+    end
+
+    describe "change_role_to_member" do
+      it "should call /admin/api/signup.xml" do
+        stub_request(:post, "http://test-url.test/admin/api/signup.xml").
+            with(:body => {"account_plan_id"=>"account_plan_id", "application_plan_id"=>"application_plan_id", "email"=>"emailorg_name", "org_name"=>"password", "password"=>"service_plan_id", "provider_key"=>"provider-key", "service_plan_id"=>"username", "username"=>{"first_field"=>"first-field"}},
+                 :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/x-www-form-urlencoded', 'User-Agent'=>'Faraday v0.9.1'}).
+            to_return(:status => 200, :body => "", :headers => {})
+
+        @threescale.signup_express "account_plan_id", "application_plan_id", "email" "org_name", "password",
+          "service_plan_id", "username", {:first_field => 'first-field'}
+      end
+    end
+
+    describe "approve_account" do
+      it "should call /admin/api/accounts/{account_id}/users/{user_id}/member.xml" do
+        stub_request(:put, "http://test-url.test/admin/api/accounts/account_id/approve.xml").
+            with(:body => {"provider_key"=>"provider-key"},
+                 :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/x-www-form-urlencoded', 'User-Agent'=>'Faraday v0.9.1'}).
+            to_return(:status => 200, :body => "", :headers => {})
+
+        @threescale.approve_account "account_id"
       end
     end
   end
