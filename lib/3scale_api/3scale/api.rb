@@ -121,23 +121,50 @@ module Threescale
 
     def signup_express(account_plan_id, application_plan_id, email, org_name, password, service_plan_id, username,
       additional_fields = nil)
-      params = {:provider_key => @provider_key, :username => username,
-                :password => password, :email => email, :org_name => org_name, :account_plan_id => account_plan_id,
-                :service_plan_id => service_plan_id, :application_plan_id => application_plan_id}
+      params = {:provider_key => @provider_key, :username => username, :password => password, :email => email,
+        :org_name => org_name, :account_plan_id => account_plan_id, :service_plan_id => service_plan_id,
+        :application_plan_id => application_plan_id}
       if (additional_fields)
         additional_fields.each do |key, value|
           params[key] = value
         end
       end
       response = @conn.post "/admin/api/signup.xml", params
-      return false if response.status != 201
       xml = Nokogiri::XML(response.body)
+      result = {
+          :success => false
+      }
+      if response.status == 422
+        errors =  xml.xpath("//errors/error").map do |error|
+          error.text
+        end
+        result[:errors] = errors
+      end
+      return result if response.status != 201
+      result[:success] = true
+
       account_id = xml.xpath('//account/id').first.text
       user_id = xml.xpath('//account/users/user/id').text
       self.approve_account account_id
       results = self.get_application_list account_id
       results[0][:user_id] = user_id.to_s
-      results
+      result[:account_info] = results
+    end
+
+    def get_account_plans
+      response = @conn.get "/admin/api/account_plans.xml", {:provider_key => @provider_key}
+      return false if response.status != 200
+      xml = Nokogiri::XML(response.body)
+      account_plans = Array.new
+      xml.xpath("//plans/plan").map do |account_plan|
+        if account_plan.css("state").text == "published"
+          account_plans.push({
+            :name => account_plan.css("name").text,
+            :account_plan_id => account_plan.css("id").text
+          })
+        end
+      end
+      account_plans
     end
 
     def create_user(account_id, email, password, username)

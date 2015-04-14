@@ -50,6 +50,7 @@ describe "3scaleApi" do
                 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
                 'User-Agent'=>'Faraday v0.9.1'}).
             to_return(:status => 200, :body => "", :headers => {})
+
         @threescale.get_application_keys 'account-id', 'application-id'
       end
     end
@@ -99,7 +100,6 @@ describe "3scaleApi" do
                    'Content-Type'=>'application/x-www-form-urlencoded',
                    'User-Agent'=>'Faraday v0.9.1'})
 
-
         @threescale.generate_application_key 'account-id', 'application-id'
       end
     end
@@ -141,6 +141,7 @@ describe "3scaleApi" do
         stub_request(:get, "http://test-url.test/admin/api/services.xml?provider_key=provider-key").
             with(:headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'User-Agent'=>'Faraday v0.9.1'}).
             to_return(:status => 200, :body => "", :headers => {})
+
         @threescale.get_services
       end
     end
@@ -151,6 +152,7 @@ describe "3scaleApi" do
             with(:body => {"email"=>"email", "password"=>"password", "provider_key"=>"provider-key", "username"=>"username"},
                  :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/x-www-form-urlencoded', 'User-Agent'=>'Faraday v0.9.1'}).
             to_return(:status => 200, :body => "", :headers => {})
+
         @threescale.create_user "account-id", "email", 'password', 'username'
       end
     end
@@ -161,6 +163,7 @@ describe "3scaleApi" do
             with(:body => {"provider_key"=>"provider-key"},
                  :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/x-www-form-urlencoded', 'User-Agent'=>'Faraday v0.9.1'}).
             to_return(:status => 200, :body => "", :headers => {})
+
         @threescale.activate_user "account-id", "user-id"
       end
     end
@@ -171,6 +174,7 @@ describe "3scaleApi" do
             with(:body => {"provider_key"=>"provider-key"},
                  :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/x-www-form-urlencoded', 'User-Agent'=>'Faraday v0.9.1'}).
             to_return(:status => 200, :body => "", :headers => {})
+
         @threescale.change_role_to_admin "account-id", "user-id"
       end
     end
@@ -181,6 +185,7 @@ describe "3scaleApi" do
             with(:body => {"provider_key"=>"provider-key"},
                  :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/x-www-form-urlencoded', 'User-Agent'=>'Faraday v0.9.1'}).
             to_return(:status => 200, :body => "", :headers => {})
+
         @threescale.change_role_to_member "account-id", "user-id"
       end
     end
@@ -205,6 +210,28 @@ describe "3scaleApi" do
             to_return(:status => 200, :body => "", :headers => {})
 
         @threescale.approve_account "account_id"
+      end
+    end
+
+    describe "signup_express" do
+      it "should call admin/api/accounts/account_id/approve.xml" do
+        stub_request(:post, "http://test-url.test/admin/api/signup.xml").
+            with(:body => {"account_plan_id"=>"account-plan-id", "application_plan_id"=>"application-plan-id", "email"=>"email", "optional"=>"optional", "org_name"=>"org-name", "password"=>"password", "provider_key"=>"provider-key", "service_plan_id"=>"service-plan", "username"=>"username"},
+                 :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/x-www-form-urlencoded', 'User-Agent'=>'Faraday v0.9.1'}).
+            to_return(:status => 200, :body => "", :headers => {})
+
+        @threescale.signup_express "account-plan-id", "application-plan-id", "email", "org-name", "password",
+          "service-plan", "username", {:optional => 'optional'}
+      end
+    end
+
+    describe "get_account_plans" do
+      it "should call /admin/api/account_plans.xml" do
+        stub_request(:get, "http://test-url.test/admin/api/account_plans.xml?provider_key=provider-key").
+            with(:headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'User-Agent'=>'Faraday v0.9.1'}).
+            to_return(:status => 200, :body => "", :headers => {})
+
+        @threescale.get_account_plans
       end
     end
   end
