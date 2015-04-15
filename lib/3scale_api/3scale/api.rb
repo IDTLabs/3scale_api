@@ -149,6 +149,7 @@ module Threescale
       results = self.get_application_list account_id
       results[0][:user_id] = user_id.to_s
       result[:account_info] = results
+      result
     end
 
     def get_account_plans
