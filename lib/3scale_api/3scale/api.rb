@@ -81,7 +81,9 @@ module Threescale
         :id => application.css('id').text,
         :name => application.css('name').text,
         :application_id => application.css('application_id').text,
-        :plan_type => application.css('plan name').text})
+        :plan_type => application.css('plan name').text,
+        :service_id => application.css('service_id').first.text
+        })
       end
       results
     end
@@ -119,11 +121,9 @@ module Threescale
       response.status == 201
     end
 
-    def signup_express(account_plan_id, application_plan_id, email, org_name, password, service_plan_id, username,
-      additional_fields = nil)
+    def signup_express( email, org_name, password, username, additional_fields = nil)
       params = {:provider_key => @provider_key, :username => username, :password => password, :email => email,
-        :org_name => org_name, :account_plan_id => account_plan_id, :service_plan_id => service_plan_id,
-        :application_plan_id => application_plan_id}
+        :org_name => org_name}
       if (additional_fields)
         additional_fields.each do |key, value|
           params[key] = value

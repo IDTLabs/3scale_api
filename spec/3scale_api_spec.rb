@@ -190,18 +190,6 @@ describe "3scaleApi" do
       end
     end
 
-    describe "change_role_to_member" do
-      it "should call /admin/api/signup.xml" do
-        stub_request(:post, "http://test-url.test/admin/api/signup.xml").
-            with(:body => {"account_plan_id"=>"account_plan_id", "application_plan_id"=>"application_plan_id", "email"=>"emailorg_name", "org_name"=>"password", "password"=>"service_plan_id", "provider_key"=>"provider-key", "service_plan_id"=>"username", "username"=>{"first_field"=>"first-field"}},
-                 :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/x-www-form-urlencoded', 'User-Agent'=>'Faraday v0.9.1'}).
-            to_return(:status => 200, :body => "", :headers => {})
-
-        @threescale.signup_express "account_plan_id", "application_plan_id", "email" "org_name", "password",
-          "service_plan_id", "username", {:first_field => 'first-field'}
-      end
-    end
-
     describe "approve_account" do
       it "should call /admin/api/accounts/{account_id}/users/{user_id}/member.xml" do
         stub_request(:put, "http://test-url.test/admin/api/accounts/account_id/approve.xml").
@@ -216,12 +204,11 @@ describe "3scaleApi" do
     describe "signup_express" do
       it "should call admin/api/accounts/account_id/approve.xml" do
         stub_request(:post, "http://test-url.test/admin/api/signup.xml").
-            with(:body => {"account_plan_id"=>"account-plan-id", "application_plan_id"=>"application-plan-id", "email"=>"email", "optional"=>"optional", "org_name"=>"org-name", "password"=>"password", "provider_key"=>"provider-key", "service_plan_id"=>"service-plan", "username"=>"username"},
+            with(:body => {"email"=>"email", "optional"=>"optional", "org_name"=>"org-name", "password"=>"password", "provider_key"=>"provider-key", "username"=>"username"},
                  :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/x-www-form-urlencoded', 'User-Agent'=>'Faraday v0.9.1'}).
             to_return(:status => 200, :body => "", :headers => {})
 
-        @threescale.signup_express "account-plan-id", "application-plan-id", "email", "org-name", "password",
-          "service-plan", "username", {:optional => 'optional'}
+        @threescale.signup_express  "email", "org-name", "password", "username", {:optional => 'optional'}
       end
     end
 
