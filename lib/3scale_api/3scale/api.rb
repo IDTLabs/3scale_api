@@ -78,7 +78,7 @@ module Threescale
         end
         results.push(
         {:keys => keys,
-        :id => application.css('id').text,
+        :id => application.css('id').first.text,
         :name => application.css('name').text,
         :application_id => application.css('application_id').text,
         :plan_type => application.css('plan name').text,
