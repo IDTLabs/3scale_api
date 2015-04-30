@@ -221,5 +221,14 @@ describe "3scaleApi" do
         @threescale.get_account_plans
       end
     end
+
+    describe "load_application_data" do
+      it "should call /admin/api/accounts/{account_id}/applications/{application_id}.xml" do
+        stub_request(:get, "http://test-url.test/admin/api/accounts/account-id/applications/application-id.xml?provider_key=provider-key").
+            with(:headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'User-Agent'=>'Faraday v0.9.1'}).
+            to_return(:status => 200, :body => "", :headers => {})
+        @threescale.load_application_data "account-id", "application-id"
+      end
+    end
   end
 end

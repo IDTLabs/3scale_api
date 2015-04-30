@@ -101,6 +101,19 @@ module Threescale
       end
     end
 
+    def get_service_plans_by_
+      results = Array.new
+      response = @conn.get "/admin/api/application_plans.xml", {:provider_key => @provider_key }
+      xml = Nokogiri::XML(response.body)
+      plans = xml.xpath("//plans/plan")
+      plans = plans.map do |plan|
+        {
+            :name => plan.css("name").text,
+            :service_plan_id => plan.css("service_id").text
+        }
+      end
+    end
+
     def get_services
       results = Array.new
       response = @conn.get "/admin/api/services.xml", {:provider_key => @provider_key }
@@ -193,5 +206,19 @@ module Threescale
       response.status == 201
     end
 
+    def load_application_data(account_id, application_id)
+      response = @conn.get "/admin/api/accounts/#{account_id}/applications/#{application_id}.xml",{
+        :provider_key => @provider_key}
+      return false if response.status != 200
+      xml = Nokogiri::XML(response.body)
+      application_data = {:keys => Array.new}
+      xml.xpath("//keys/key").map do |key|
+        application_data[:keys].push key.text
+      end
+      application_data[:app_id] = xml.css("application application_id").text
+      application_data[:name] = xml.css("application name").text
+      application_data[:description] = xml.css("application description").text
+      application_data
+    end
   end
 end
