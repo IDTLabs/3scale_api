@@ -22,6 +22,17 @@ Or install it yourself as:
 
     $ gem install 3scale_api
 
+## Configure
+
+Initialize the settings as follows:
+
+```ruby
+require "threescale"
+Threescale.configure do |config|
+  config.provider_key = ENV["THREESCALE_PROVIDER_KEY"]
+  config.base_url = ENV["THREESCALE_URL"]
+end
+```
 
 ## Contributing
 

@@ -5,20 +5,10 @@ require 'nokogiri'
 module Threescale
   class API
     attr_accessor :provider_key, :url, :path, :conn
-    def initialize(provider_key = nil)
-      if ENV['THREESCALE_URL']
-        @url = ENV['THREESCALE_URL']
-      else
-        raise ("Please set your 3 Scale URL as an environmental variable THREESCALE_URL")
-      end
-      if not provider_key
-        if ENV['THREESCALE_PROVIDER_KEY']
-          provider_key = ENV['THREESCALE_PROVIDER_KEY']
-        end
-        raise Error, "You must provide a 3 Scale provider key" if not provider_key
-      end
+    def initialize
+      @config = Threescale.configuration
       @provider_key = provider_key
-      @conn = Faraday.new(url = @url) do | faraday|
+      @conn = Faraday.new(url = @config.base_url) do | faraday|
         faraday.request :url_encoded
         faraday.response :logger
         faraday.adapter Faraday.default_adapter
