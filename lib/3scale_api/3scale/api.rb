@@ -7,7 +7,7 @@ module Threescale
     attr_accessor :provider_key, :url, :path, :conn
     def initialize
       @config = Threescale.configuration
-      @provider_key = provider_key
+      @provider_key = @config.provider_key
       @conn = Faraday.new(url = @config.base_url) do | faraday|
         faraday.request :url_encoded
         faraday.response :logger
@@ -125,13 +125,14 @@ module Threescale
     end
 
     def signup_express( email, org_name, password, username, additional_fields = nil)
-      params = {:provider_key => @provider_key, :username => username, :password => password, :email => email,
-        :org_name => org_name}
-      if (additional_fields)
-        additional_fields.each do |key, value|
-          params[key] = value
-        end
-      end
+      params = {
+        :provider_key => @provider_key,
+        :org_name => org_name,
+        :username => username,
+        :email => email,
+        :password => password,
+      }
+      params.merge!( additional_fields ) if (additional_fields)
       response = @conn.post "/admin/api/signup.xml", params
       xml = Nokogiri::XML(response.body)
       result = {

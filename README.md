@@ -27,7 +27,7 @@ Or install it yourself as:
 Initialize the settings as follows:
 
 ```ruby
-require "threescale"
+require "3scale_api"
 Threescale.configure do |config|
   config.provider_key = ENV["THREESCALE_PROVIDER_KEY"]
   config.base_url = ENV["THREESCALE_URL"]
