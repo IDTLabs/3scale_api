@@ -4,10 +4,12 @@ require 'nokogiri'
 
 module Threescale
   class API
-    attr_accessor :provider_key, :url, :path, :conn
-    def initialize
+    attr_accessor :provider_key, :path, :conn
+    def initialize( provider_key=nil )
       @config = Threescale.configuration
-      @provider_key = @config.provider_key
+      raise "Provider Key must be set in the configuration." if provider_key.nil? && @config.provider_key.nil?
+      raise "Base Url must be set in the configuration." if @config.base_url.nil?
+      @provider_key = provider_key ? provider_key : @config.provider_key
       @conn = Faraday.new(url = @config.base_url) do | faraday|
         faraday.request :url_encoded
         faraday.response :logger

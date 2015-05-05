@@ -1,41 +1,53 @@
 require "spec_helper"
 
-describe "3scaleApi" do
-  before(:all) do
-    ENV["THREESCALE_URL"] = nil
-    ENV["THREESCALE_PROVIDER_KEY"] = nil
-  end
+describe Threescale do
 
   describe "Instantiate 3scale object" do
-    it "should raise an error when there is no env variables and you instantiate" do
+    it "should raise an error when configuration variables are nil and you instantiate" do
       lambda do
         Threescale::API.new
       end.should raise_error
     end
-    it "should raise an error when there is no env variables and you instantiate obj" do
+    it "should raise an error when base_url variable is set and you instantiate obj" do
       lambda do
-        ENV["THREESCALE_URL"] = "test-url"
+        Threescale.configure do |config|
+          config.base_url = "https://example.com"
+        end
         Threescale::API.new
       end.should raise_error
     end
     it "should not raise an error when there is one env variables and you instantiate" do
       lambda do
-        ENV["THREESCALE_URL"] = "test-url"
+        Threescale.configure do |config|
+          config.base_url = "https://example.com"
+        end
         Threescale::API.new "provider-key"
       end.should_not raise_error
     end
     it "should not raise an error when both env variables and you instantiate" do
       lambda do
-        ENV["THREESCALE_URL"] = "http://test-url"
-        ENV["THREESCALE_PROVIDER_KEY"] = "provider-key"
+        Threescale.configure do |config|
+          config.provider_key = "provider-key"
+          config.base_url = "https://example.com"
+        end
         Threescale::API.new
       end.should_not raise_error
     end
   end
 
+end
+
+describe Threescale::API do
+
+  before(:all) do
+    Threescale.configure do |config|
+      config.provider_key = "provider-key"
+      config.base_url = "http://test-url.test"
+    end
+  end
+
   describe "API methods" do
     before(:all) do
-      ENV["THREESCALE_URL"] = "http://test-url.test"
       @threescale = Threescale::API.new 'provider-key'
     end
 
