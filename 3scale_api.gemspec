@@ -6,8 +6,8 @@ require '3scale_api/version'
 Gem::Specification.new do |spec|
   spec.name          = "3scale_api"
   spec.version       = Threescale::VERSION
-  spec.authors       = ["Robbie Holmes"]
-  spec.email         = ["robbiethegeek@gmail.com"]
+  spec.authors       = ["Robbie Holmes","Ian Sheridan"]
+  spec.email         = ["robbiethegeek@gmail.com","ian.sheridan@gmail.com"]
   spec.summary       = %q{3Scale API client gem.}
   spec.description   = %q{This gem is to be used to interact with 3Scale's API.}
   spec.homepage      = "https://github.com/IDTLabs/3scale_api"
